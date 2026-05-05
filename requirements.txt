@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+openai
+pydantic
+python-dotenv
+mcp
+requests
+flask
+flask_cors
+PyJWT

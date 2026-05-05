@@ -1,7 +1,7 @@
 import os
 import sys
 
-from trip_planer.agents.CoordinatorAgent import CoordinatorAgent
+from trip_planer.agent.CoordinatorAgent import CoordinatorAgent
 
 # 1. 解决目录引入问题 (确保能找到 trip_planer 包)
 current_dir = os.path.dirname(os.path.abspath(__file__))

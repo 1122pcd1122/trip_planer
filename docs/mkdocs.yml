@@ -1,0 +1,108 @@
+site_name: 智能旅行助手 API 文档
+site_description: 智能旅行助手 RESTful API 接口文档
+site_author: Trip Planner Team
+site_url: https://trip-planner-api.example.com
+
+# 主题配置
+theme:
+  name: material
+  language: zh
+  palette:
+    - scheme: default
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: 切换到暗黑模式
+    - scheme: slate
+      primary: teal
+      accent: teal
+      toggle:
+        icon: material/toggle-switch
+        name: 切换到明亮模式
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
+# 插件配置
+plugins:
+  - search:
+      lang:
+        - zh
+        - en
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_root_heading: true
+            show_category_heading: true
+
+# 扩展配置
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - tables
+  - fenced_code
+  - codehilite:
+      guess_lang: true
+      linenums: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+# 导航配置
+nav:
+  - 首页: index.md
+  - 快速开始:
+      - 安装部署: getting-started/installation.md
+      - 配置说明: getting-started/configuration.md
+      - 运行测试: getting-started/testing.md
+  - API 接口:
+      - 接口概览: api/overview.md
+      - 基础接口:
+          - 健康检查: api/basic/health.md
+          - 旅行计划: api/basic/plan.md
+          - 天气查询: api/basic/weather.md
+      - 推荐接口:
+          - 景点推荐: api/recommendation/attraction.md
+          - 酒店推荐: api/recommendation/hotel.md
+          - 餐饮推荐: api/recommendation/restaurant.md
+      - 详情接口:
+          - 酒店详情: api/detail/hotel.md
+          - 景点详情: api/detail/attraction.md
+          - 餐厅详情: api/detail/restaurant.md
+  - 数据模型:
+      - 请求格式: models/request.md
+      - 响应格式: models/response.md
+      - 数据结构: models/data-structures.md
+  - 架构设计:
+      - Agent 架构: architecture/agents.md
+      - 工具系统: architecture/tools.md
+      - 服务流程: architecture/workflow.md
+
+# 额外配置
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/trip-planner
+  version:
+    provider: mike
+
+# 版权信息
+copyright: Copyright &copy; 2024 Trip Planner Team

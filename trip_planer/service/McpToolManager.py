@@ -26,7 +26,7 @@ from trip_planer.tools.MCPSubTool import MCPTool
 from trip_planer.util.logger import logger
 
 # 加载环境变量
-load_dotenv(dotenv_path='/trip_planer/env/.env')
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', 'env', '.env'))
 
 
 class McpToolManager:
@@ -58,6 +58,7 @@ class McpToolManager:
             - 请使用全局单例对象 tool_manager
         """
         self.amap_api_key = gaode_key or os.getenv("GAODE_KEY")
+        logger.info(f'MCP Tool Manager amp_api_key: {self.amap_api_key}')
         self._amap_tool = None  # 工具实例缓存
 
 
@@ -102,7 +103,7 @@ class McpToolManager:
                 name="amap_mcp",
                 command=cmd,
                 # 加上 --no-install 屏蔽干扰
-                args=["--no-install", "@amap/amap-maps-mcp-server"],
+                args=["-y", "@amap/amap-maps-mcp-server@0.0.8"],
                 env={"AMAP_MAPS_API_KEY": self.amap_api_key},
                 auto_expand=True  # 自动展开子工具
             )

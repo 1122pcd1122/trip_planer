@@ -26,7 +26,7 @@ from typing import List, Dict
 from trip_planer.util.logger import logger
 
 # 加载 .env 文件中的环境变量
-load_dotenv(dotenv_path='D:\\pythonProject\\myAgent\\trip_planer\\env\\.env')
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), '..', 'env', '.env'))
 
 
 class AgentsLLM:
@@ -66,6 +66,11 @@ class AgentsLLM:
         apiKey = apiKey or os.getenv("LLM_API_KEY")
         baseUrl = baseUrl or os.getenv("LLM_BASE_URL")
         timeout = timeout or int(os.getenv("LLM_TIMEOUT", 300))
+
+        logger.info(f"model: {self.model}")
+        logger.info(f"apiKey: {apiKey}")
+        logger.info(f"baseUrl: {baseUrl}")
+        logger.info(f"timeout: {timeout}")
 
         # 验证必要参数
         if not all([self.model, apiKey, baseUrl]):
