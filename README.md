@@ -1,204 +1,132 @@
-# 智能旅行规划助手
+# Trip Planner - Backend Server
 
-基于多智能体架构的旅行规划服务，自动整合天气、景点、酒店、餐饮信息，生成完整旅行行程。
+智能旅行计划后端服务，基于 LLM Agent 架构和 Flask 框架构建。
 
-## 功能特性
+## ✨ 核心功能
 
-- **天气查询**：获取目的地实时天气及未来多天预报
-- **景点推荐**：根据城市和偏好推荐热门景点
-- **酒店推荐**：智能推荐适合的住宿选择
-- **餐饮推荐**：发现当地特色美食
-- **行程规划**：自动生成按天划分的详细旅行计划
+### AI 智能规划
+- 🤖 **多 Agent 协作** - 天气、景点、酒店、餐饮专业 Agent 协同工作
+- 📋 **行程自动生成** - 输入目的地和天数，自动生成完整旅行计划
+- 🎯 **偏好匹配** - 根据用户偏好标签精准推荐
 
-## 技术架构
+### API 接口
+| 接口 | 方法 | 说明 |
+|------|------|------|
+| `/api/plan` | POST | 生成完整旅行计划 |
+| `/api/weather` | POST | 查询目的地天气 |
+| `/api/attraction` | POST | 推荐旅游景点 |
+| `/api/hotel` | POST | 推荐酒店住宿 |
+| `/api/restaurant` | POST | 推荐特色餐饮 |
+| `/api/hotel/detail` | POST | 获取酒店详情 |
+| `/api/attraction/detail` | POST | 获取景点详情 |
+| `/api/restaurant/detail` | POST | 获取餐厅详情 |
+| `/api/auth/register` | POST | 用户注册 |
+| `/api/auth/login` | POST | 用户登录 |
+| `/api/trip/save` | POST | 保存行程到云端 |
+| `/api/trip/list` | GET | 获取用户行程列表 |
+| `/api/trip/detail` | GET | 获取行程详情 |
 
-- **后端**：FastAPI + Python
-- **大语言模型**：OpenAI API (支持多模型切换)
-- **地图服务**：高德地图 MCP 工具
-- **架构**：多智能体协同 (Coordinator + 4 专项 Agent)
+## 🏗️ 技术架构
 
-## 项目结构
-
+### Agent 架构
 ```
-myAgent/
-├── trip_planer/
-│   ├── agent/                  # 智能体模块
-│   │   ├── base/               # 基础智能体
-│   │   ├── specific/           # 专项智能体
-│   │   │   ├── WeatherAgent.py      # 天气查询
-│   │   │   ├── AttractionAgent.py  # 景点推荐
-│   │   │   ├── HotelAgent.py       # 酒店推荐
-│   │   │   └── RestaurantAgent.py  # 餐饮推荐
-│   │   └── CoordinatorAgent.py  # 行程协调
-│   ├── service/                # 服务层
-│   ├── tools/                  # 工具封装
-│   ├── test/                   # 测试用例
-│   ├── util/                   # 工具函数
-│   └── main_api.py             # API 入口
-└── .env                        # 环境配置
-```
-
-## 环境配置
-
-在 `.env` 文件中配置：
-
-```env
-# OpenAI API 配置
-OPENAI_API_KEY=your_api_key
-OPENAI_BASE_URL=https://api.openai.com/v1
-OPENAI_MODEL=gpt-4o-mini
-
-# MCP 高德地图配置
-AMAP_MCP_SERVER_URL=http://localhost:8000
-AMAP_MCP_API_KEY=your_amap_key
+CoordinatorAgent (协调器)
+    ├── WeatherAgent (天气查询) → 高德地图 MCP
+    ├── AttractionAgent (景点推荐) → 高德地图 MCP
+    ├── HotelAgent (酒店推荐) → 高德地图 MCP
+    └── RestaurantAgent (餐饮推荐) → 高德地图 MCP
 ```
 
-## 启动服务
+### 技术栈
+- **Web 框架**: Flask + Flask-CORS
+- **LLM**: 通义千问 (Qwen) via SiliconFlow
+- **工具调用**: MCP (Model Context Protocol)
+- **地图服务**: 高德地图 API
+- **用户认证**: JWT Token
+- **数据库**: SQLite (用户数据)
 
+## 📦 项目结构
+
+| 目录 | 说明 |
+|------|------|
+| `agent/base/` | Agent 基类 |
+| `agent/specific/` | 各专业 Agent 实现 |
+| `agent/CoordinatorAgent.py` | 多 Agent 协调器 |
+| `service/` | 核心服务 (LLM、认证、MCP) |
+| `tools/` | MCP 工具封装 |
+| `util/` | 工具类 (日志、JSON 提取) |
+| `test/` | 测试脚本 |
+
+## 🚀 快速开始
+
+### 1. 环境要求
+- Python 3.8+
+- Node.js (用于 MCP Server)
+
+### 2. 安装依赖
 ```bash
-# 安装依赖
-pip install -r requirements.txt
-
-# 启动 API 服务
-python -m trip_planer.main_api
+pip install flask flask-cors python-dotenv
+pip install mcp openai
 ```
 
-服务默认运行在 `http://localhost:8000`
+### 3. 配置环境变量
+复制并修改 `env/.env` 文件：
+```env
+# 大语言模型配置
+LLM_MODEL_ID=Qwen/Qwen3-14B
+LLM_API_KEY=your_api_key
+LLM_BASE_URL=https://api.siliconflow.cn/v1/
+LLM_TIMEOUT=300
 
-## API 接口
+# 高德地图配置
+GAODE_KEY=your_amap_api_key
+```
+
+### 4. 启动服务
+```bash
+cd trip_planer
+python main_api.py
+```
+
+服务默认运行在 `http://localhost:5000`
+
+## 📡 API 使用示例
 
 ### 生成旅行计划
-
-```http
-POST /api/plan
-Content-Type: application/json
-
-{
+```bash
+curl -X POST http://localhost:5000/api/plan \
+  -H "Content-Type: application/json" \
+  -d '{
     "destination": "成都",
-    "days": "2",
-    "preferences": "美食"
-}
+    "days": "3",
+    "preferences": "经济型酒店,川菜,自然风光"
+  }'
 ```
 
-### 天气查询
-
-```http
-POST /api/weather
-Content-Type: application/json
-
-{
+### 查询天气
+```bash
+curl -X POST http://localhost:5000/api/weather \
+  -H "Content-Type: application/json" \
+  -d '{
     "destination": "成都",
-    "days": "2",
-    "preferences": ""
-}
+    "days": "3"
+  }'
 ```
 
-### 景点推荐
+## 🔧 配置说明
 
-```http
-POST /api/attraction
-Content-Type: application/json
+### LLM 模型
+支持任何 OpenAI 兼容的 API：
+- SiliconFlow (默认)
+- 阿里云 DashScope
+- 本地部署模型
 
-{
-    "destination": "成都",
-    "days": "2",
-    "preferences": ""
-}
+### 高德地图 MCP
+需要安装高德地图 MCP Server：
+```bash
+npm install -g @amap/amap-maps-mcp-server
 ```
 
-### 酒店推荐
+## 📄 License
 
-```http
-POST /api/hotel
-Content-Type: application/json
-
-{
-    "destination": "成都",
-    "days": "2",
-    "preferences": ""
-}
-```
-
-### 餐饮推荐
-
-```http
-POST /api/restaurant
-Content-Type: application/json
-
-{
-    "destination": "成都",
-    "days": "2",
-    "preferences": ""
-}
-```
-
-## 响应格式
-
-所有接口返回统一格式：
-
-```json
-{
-    "status": "success",
-    "message": "返回数据",
-    "code": "200"
-}
-```
-
-## 旅行计划返回格式
-
-```json
-{
-    "days": [
-        {
-            "dayNum": 1,
-            "date": "2026-04-30",
-            "weather": "阴",
-            "itinerary": [
-                {
-                    "time": "09:00",
-                    "spot": "宽窄巷子",
-                    "address": "成都市青羊区",
-                    "latitude": "",
-                    "longitude": ""
-                }
-            ],
-            "meals": {
-                "lunch": {
-                    "name": "龙抄手",
-                    "address": "春熙路",
-                    "dish": "红油抄手"
-                },
-                "dinner": {
-                    "name": "小龙坎火锅",
-                    "address": "总府路",
-                    "dish": "麻辣火锅"
-                }
-            },
-            "tips": "建议携带雨具"
-        }
-    ],
-    "hotel": [
-        {
-            "name": "成都香格里拉大酒店",
-            "address": "成都市锦江区滨江东路9号",
-            "price": "600-1200元/晚",
-            "advantage": "位于市中心春熙路商圈，交通便利",
-            "latitude": "",
-            "longitude": ""
-        }
-    ],
-    "overallTips": "整体行程建议..."
-}
-```
-
-## 依赖
-
-- fastapi
-- uvicorn
-- openai
-- pydantic
-- python-dotenv
-
-## License
-
-MIT
+MIT License
