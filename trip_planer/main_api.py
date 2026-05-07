@@ -150,8 +150,19 @@ def generate_trip_plan():
         if not destination:
             return make_response(status="error", message="目的地不能为空", code="400")
         
-        # 优先使用日期范围，兼容旧版天数参数
-        if start_date and end_date:
+        # 根据开始日期和天数计算结束日期
+        if start_date and days:
+            from datetime import datetime, timedelta
+            try:
+                start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+                days_int = int(days) if days else 3
+                end_dt = start_dt + timedelta(days=days_int - 1)
+                end_date = end_dt.strftime("%Y-%m-%d")
+                days = str(days_int)
+            except ValueError:
+                pass
+        # 兼容旧版：如果没有开始日期但有结束日期，则计算天数
+        elif start_date and end_date:
             from datetime import datetime
             try:
                 d1 = datetime.strptime(start_date, "%Y-%m-%d")
@@ -326,6 +337,17 @@ def get_weather():
         end_date = data.get("endDate", "")
         preferences = data.get("preferences", "")
         
+        # 根据开始日期和天数计算结束日期
+        if start_date and days:
+            from datetime import datetime, timedelta
+            try:
+                start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+                days_int = int(days) if days else 3
+                end_dt = start_dt + timedelta(days=days_int - 1)
+                end_date = end_dt.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
+        
         query_parts = [f"查询 {destination} 的天气情况"]
         if start_date and end_date:
             query_parts.append(f"时间：{start_date} 至 {end_date}")
@@ -366,6 +388,17 @@ def get_attraction():
         start_date = data.get("startDate", "")
         end_date = data.get("endDate", "")
         preferences = data.get("preferences", "")
+        
+        # 根据开始日期和天数计算结束日期
+        if start_date and days:
+            from datetime import datetime, timedelta
+            try:
+                start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+                days_int = int(days) if days else 3
+                end_dt = start_dt + timedelta(days=days_int - 1)
+                end_date = end_dt.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
         
         query_parts = [f"推荐 {destination} 的景点"]
         if start_date and end_date:
@@ -409,6 +442,17 @@ def get_hotel():
         end_date = data.get("endDate", "")
         preferences = data.get("preferences", "")
         
+        # 根据开始日期和天数计算结束日期
+        if start_date and days:
+            from datetime import datetime, timedelta
+            try:
+                start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+                days_int = int(days) if days else 3
+                end_dt = start_dt + timedelta(days=days_int - 1)
+                end_date = end_dt.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
+        
         query_parts = [f"推荐 {destination} 的酒店"]
         if start_date and end_date:
             query_parts.append(f"时间：{start_date} 至 {end_date}")
@@ -450,6 +494,17 @@ def get_restaurant():
         start_date = data.get("startDate", "")
         end_date = data.get("endDate", "")
         preferences = data.get("preferences", "")
+        
+        # 根据开始日期和天数计算结束日期
+        if start_date and days:
+            from datetime import datetime, timedelta
+            try:
+                start_dt = datetime.strptime(start_date, "%Y-%m-%d")
+                days_int = int(days) if days else 3
+                end_dt = start_dt + timedelta(days=days_int - 1)
+                end_date = end_dt.strftime("%Y-%m-%d")
+            except ValueError:
+                pass
         
         query_parts = [f"推荐 {destination} 的特色餐饮"]
         if start_date and end_date:
