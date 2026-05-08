@@ -7,4 +7,5 @@ mcp
 requests
 flask
 flask_cors
+flask_limiter
 PyJWT
